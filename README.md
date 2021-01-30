@@ -14,4 +14,7 @@ pip3 install -r requirements.txt
 
 https://huggingface.co/transformers/
 
+# transformers-gpt2源码连接
+https://huggingface.co/transformers/_modules/transformers/models/gpt2/modeling_tf_gpt2.html#TFGPT2LMHeadModel
+
 # 测试图在image文件中。训练了100轮，loss最终下降到了0.2左右。
