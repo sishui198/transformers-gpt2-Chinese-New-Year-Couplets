@@ -1,7 +1,7 @@
 from transformers import BertTokenizer
 import numpy as np
 
-tokenizer = BertTokenizer(vocab_file="vocab-cn-v3.txt")
+tokenizer = BertTokenizer(vocab_file="vocab.txt")
 
 with open("data/train_data-v2.txt", "r") as f:
     data = f.readlines()
