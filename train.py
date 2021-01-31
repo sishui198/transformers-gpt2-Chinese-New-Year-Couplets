@@ -9,6 +9,8 @@ gpt2_model = TFGPT2LMHeadModel(config=config)
 
 train_file = np.load("train_data-cn.npz")
 input_ids = train_file["arr_0"]
+print(input_ids[:2])
+print(input_ids.shape)
 
 input_act = np.array(input_ids > 0, dtype="int32")
 
@@ -34,7 +36,7 @@ dataset = tf.data.Dataset.from_tensor_slices(({
     "input_2":input_act[:, :-1]
 }, input_ids[:, 1:])).shuffle(1000).batch(32)
 
-total_steps = input_ids.shape[0] // 32 * 100
+total_steps = input_ids.shape[0] // 32 * 60
 print("总步数：", total_steps)
 natural_exp_decay = NaturalExpDecay(initial_learning_rate=2e-5,
                                     decay_steps=total_steps,
@@ -44,7 +46,8 @@ optimizer = keras.optimizers.Adam(natural_exp_decay)
 model = models()
 model.compile(optimizer=optimizer, loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True, reduction=tf.keras.losses.Reduction.NONE), metrics=["accuracy"])
 model.summary()
+train_call = keras.callbacks.ModelCheckpoint("models.h5", monitor='loss', verbose=0, save_best_only=False, save_weights_only=True, mode='auto', period=2)
 
-model.fit(dataset, epochs=100)
+model.fit(dataset, epochs=60, callbacks=[train_call])
 model.save_weights("tf_model.h5")
 gpt2_model.save_pretrained("gpt2-cn")
